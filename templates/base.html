@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}InsightHub - 洞察数据智能分析平台{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="nav-brand">
+                <span class="brand-icon">🔍</span>
+                <span class="brand-text">InsightHub</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">首页</a>
+                <a href="/sources" class="nav-link">数据源</a>
+                <a href="/configure" class="nav-link">配置分析</a>
+                <a href="/reports" class="nav-link">报告</a>
+                <a href="/pricing" class="nav-link">定价</a>
+                {% if user_id and user_id != 1 %}
+                    <a href="/api-key" class="nav-link">API</a>
+                    <a href="/logout" class="nav-link nav-btn">退出</a>
+                {% else %}
+                    <a href="/login" class="nav-link nav-btn nav-btn-primary">登录</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>InsightHub &copy; 2026 - 洞察数据智能分析平台</p>
+            <p class="footer-sub">Powered by InsightLabs · 让数据说话，让决策有据</p>
+        </div>
+    </footer>
+</body>
+</html>

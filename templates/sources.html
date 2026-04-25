@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}InsightHub - 数据源市场{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>📡 数据源市场</h1>
+    <p class="page-desc">选择您要分析的数据平台，免费数据源可直接使用，付费数据源需订阅后使用</p>
+</section>
+
+<div class="source-search">
+    <input type="text" id="sourceSearch" class="search-input" placeholder="🔍 搜索数据源..." oninput="filterSources()">
+</div>
+
+<div class="source-grid" id="sourceGrid">
+    {% for source in sources %}
+    <div class="source-card" data-name="{{ source.name }}" data-categories="{{ source.categories|join(',') }}">
+        <div class="source-header">
+            <span class="source-icon">{{ source.icon }}</span>
+            <h3 class="source-name">{{ source.name }}</h3>
+        </div>
+        <p class="source-desc">{{ source.description }}</p>
+        <div class="source-tags">
+            {% for cat in source.categories %}
+            <span class="tag tag-category">{{ cat }}</span>
+            {% endfor %}
+        </div>
+        <div class="source-footer">
+            {% if source.type == 'free' %}
+                <span class="tag tag-free">✅ 免费</span>
+                <a href="/configure/{{ source.id }}" class="btn btn-sm btn-primary">配置</a>
+            {% else %}
+                <span class="tag tag-paid">🔒 ¥{{ source.price }}/月</span>
+                <a href="/pricing" class="btn btn-sm btn-secondary">订阅</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function filterSources() {
+    const query = document.getElementById('sourceSearch').value.toLowerCase();
+    const cards = document.querySelectorAll('.source-card');
+    cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        const cats = card.dataset.categories.toLowerCase();
+        if (name.includes(query) || cats.includes(query)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %}

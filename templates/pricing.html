@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}InsightHub - 定价方案{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>💰 选择适合您的方案</h1>
+    <p class="page-desc">从免费到企业级，满足不同的分析需求</p>
+</section>
+
+<div class="pricing-grid">
+    {% for plan in plans %}
+    <div class="pricing-card {% if plan.highlight %}pricing-featured{% endif %}" id="plan-{{ plan.id }}">
+        {% if plan.highlight %}
+        <div class="pricing-badge">推荐</div>
+        {% endif %}
+        <div class="pricing-header">
+            <h3 class="pricing-name">{{ plan.name }}</h3>
+            <div class="pricing-price">
+                <span class="price-amount">{{ plan.price }}</span>
+                {% if plan.period != '永久' %}
+                <span class="price-period">/{{ plan.period }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <ul class="pricing-features">
+            {% for feature in plan.features %}
+            <li class="pricing-feature">✅ {{ feature }}</li>
+            {% endfor %}
+        </ul>
+        <div class="pricing-action">
+            <a href="/configure" class="btn btn-lg {% if plan.highlight %}btn-primary{% else %}btn-secondary{% endif %} btn-block">
+                {% if plan.id == 'free' %}免费使用{% else %}订阅 {{ plan.name }}{% endif %}
+            </a>
+        </div>
+        {% if plan.id != 'free' %}
+        <div class="pricing-payment">
+            <p class="payment-hint">扫码付款后联系客服开通</p>
+            <div class="payment-codes">
+                <div class="payment-code">
+                    <img src="/assets/wechat_pay.jpg" alt="微信支付" class="payment-img">
+                    <span class="payment-label">微信支付</span>
+                </div>
+                <div class="payment-code">
+                    <img src="/assets/alipay.jpg" alt="支付宝" class="payment-img">
+                    <span class="payment-label">支付宝</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<section class="faq-section">
+    <h2 class="section-title">常见问题</h2>
+    <div class="faq-list">
+        <div class="faq-item">
+            <h4>免费版和付费版有什么区别？</h4>
+            <p>免费版每月可进行5次分析，只能使用免费数据源。付费版不限分析次数，可使用全部数据源和高级分析维度。</p>
+        </div>
+        <div class="faq-item">
+            <h4>如何付款？</h4>
+            <p>目前支持微信支付和支付宝扫码付款。付款后请添加客服微信，我们会在24小时内为您开通服务。</p>
+        </div>
+        <div class="faq-item">
+            <h4>可以退款吗？</h4>
+            <p>购买后7天内如不满意，可全额退款。企业版支持14天免费试用。</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}InsightHub - 报告详情{% endblock %}
+
+{% block content %}
+{% if error %}
+<section class="page-header">
+    <h1>❌ 报告不存在</h1>
+    <p class="page-desc">{{ error }}</p>
+    <a href="/reports" class="btn btn-primary">返回报告列表</a>
+</section>
+{% elif analysis %}
+<section class="page-header">
+    <h1>📊 分析报告</h1>
+    <div class="report-meta">
+        <span class="meta-item">🔗 数据源: {{ analysis.source_id }}</span>
+        <span class="meta-item">📅 分析时间: {{ analysis.completed_at or analysis.created_at }}</span>
+        <span class="meta-item">📌 状态: <span class="status-{{ analysis.status }}">{{ analysis.status }}</span></span>
+    </div>
+</section>
+
+{% if result %}
+<div class="report-summary">
+    <div class="summary-card">
+        <div class="summary-number">{{ result.total_reviews }}</div>
+        <div class="summary-label">分析评价数</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-number">{{ result.results|length }}</div>
+        <div class="summary-label">分析维度</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-number">{{ result.generated_at }}</div>
+        <div class="summary-label">分析模式</div>
+    </div>
+</div>
+
+{% for dim_id, dim_data in result.results.items() %}
+<div class="report-section">
+    <h2 class="section-title">
+        {% if dim_id == 'positive' %}👍{% elif dim_id == 'negative' %}👎{% elif dim_id == 'returns' %}📦{% elif dim_id == 'needs' %}💡{% elif dim_id == 'persona' %}👤{% elif dim_id == 'trends' %}📈{% else %}🔍{% endif %}
+        {{ dim_data.summary }}
+    </h2>
+
+    <!-- 洞察 TOP3 -->
+    <div class="insight-list">
+        {% for insight in dim_data.top_insights %}
+        <div class="insight-item">
+            <div class="insight-rank">#{{ insight.rank }}</div>
+            <div class="insight-content">
+                <p class="insight-text">{{ insight.content }}</p>
+                <div class="insight-bar-container">
+                    <div class="insight-bar" style="width: {{ insight.percentage }}%"></div>
+                    <span class="insight-pct">{{ insight.percentage }}%</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- 详细数据表格 -->
+    <div class="data-table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>维度</th>
+                    <th>数量</th>
+                    <th>占比</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in dim_data.details %}
+                <tr>
+                    <td>{{ detail.item }}</td>
+                    <td>{{ detail.count }}</td>
+                    <td>
+                        <div class="bar-cell">
+                            <div class="table-bar" style="width: {{ detail.ratio }}"></div>
+                            <span>{{ detail.ratio }}</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endfor %}
+
+<div class="report-actions">
+    <button class="btn btn-secondary" onclick="window.print()">🖨️ 打印/导出PDF</button>
+    <a href="/configure" class="btn btn-primary">🔄 新建分析</a>
+    <a href="/reports" class="btn btn-secondary">📋 所有报告</a>
+</div>
+
+{% else %}
+<div class="report-empty">
+    <p>分析正在进行中...</p>
+    <div class="loading-spinner"></div>
+    <a href="/reports" class="btn btn-primary">刷新状态</a>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

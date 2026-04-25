@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}InsightHub - 首页{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>洞察数据，<span class="highlight">智能决策</span></h1>
+        <p class="hero-subtitle">点几下鼠标，无需任何技术知识，就能从海量用户评价中提取洞察报告</p>
+        <div class="hero-actions">
+            <a href="/configure" class="btn btn-primary btn-lg">开始分析</a>
+            <a href="/sources" class="btn btn-secondary btn-lg">浏览数据源</a>
+        </div>
+    </div>
+</section>
+
+<section class="features">
+    <h2 class="section-title">为什么选择 InsightHub？</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>一键洞察</h3>
+            <p>输入关键词或URL，系统自动提取并分析用户评价，无需手动整理数据</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>多维分析</h3>
+            <p>好评/差评、退货原因、用户需求、用户画像等多维度分析一应俱全</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>零门槛使用</h3>
+            <p>不需要了解任何技术概念，像使用普通网站一样操作即可</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3>多数据源</h3>
+            <p>支持美团、大众点评、淘宝、小红书、京东等多个平台数据</p>
+        </div>
+    </div>
+</section>
+
+{% if recent_analyses %}
+<section class="recent-section">
+    <h2 class="section-title">最近分析</h2>
+    <div class="recent-list">
+        {% for a in recent_analyses %}
+        <a href="/report/{{ a.id }}" class="recent-item">
+            <span class="recent-source">{{ a.source_id }}</span>
+            <span class="recent-url">{{ a.keyword or a.url or '关键词分析' }}</span>
+            <span class="recent-status status-{{ a.status }}">{{ a.status }}</span>
+            <span class="recent-time">{{ a.created_at[:10] }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="stats-section">
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_sources }}</div>
+            <div class="stat-label">数据源</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">100+</div>
+            <div class="stat-label">分析维度</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">秒级</div>
+            <div class="stat-label">分析速度</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">零门槛</div>
+            <div class="stat-label">上手难度</div>
+        </div>
+    </div>
+</section>
+{% endblock %}

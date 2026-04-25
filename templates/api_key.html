@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}InsightHub - API Key 管理{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>🔑 API Key 管理</h1>
+    <p class="page-desc">用于程序化调用 InsightHub API</p>
+</section>
+
+<div class="api-key-card">
+    {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+    <div class="api-key-display">
+        <label class="input-label">您的 API Key</label>
+        <div class="key-box">
+            <code id="apiKeyText">{{ user.api_key }}</code>
+            <button class="btn btn-sm btn-secondary" onclick="copyApiKey()">📋 复制</button>
+        </div>
+    </div>
+
+    <div class="api-key-actions">
+        <form method="POST" action="/api-key/regenerate" onsubmit="return confirm('重新生成后，旧的API Key将立即失效。确认继续？')">
+            <button type="submit" class="btn btn-secondary">🔄 重新生成</button>
+        </form>
+    </div>
+
+    <div class="api-key-info">
+        <h4>使用方式</h4>
+        <pre><code># Python 示例
+import httpx
+
+API_KEY = "{{ user.api_key }}"
+response = httpx.get(
+    "https://localhost:8080/api/auth/check",
+    params={"api_key": API_KEY}
+)
+print(response.json())
+</code></pre>
+    </div>
+</div>
+
+<script>
+function copyApiKey() {
+    const key = document.getElementById('apiKeyText');
+    navigator.clipboard.writeText(key.textContent);
+    alert('API Key 已复制！');
+}
+</script>
+{% endblock %}

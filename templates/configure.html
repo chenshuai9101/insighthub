@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}InsightHub - 配置分析{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>⚙️ 一键配置分析</h1>
+    <p class="page-desc">四步完成分析配置，系统会自动提取并分析数据</p>
+</section>
+
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
+
+<form method="POST" action="/configure/run" class="configure-form">
+    <!-- Step 1: 选择数据源 -->
+    <div class="config-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+            <h3>选择数据源</h3>
+            <p>选择要分析的平台</p>
+            <div class="source-select-grid">
+                {% for source in sources %}
+                <label class="source-option {% if selected_source and selected_source.id == source.id %}selected{% endif %}">
+                    <input type="radio" name="source_id" value="{{ source.id }}"
+                           {% if selected_source and selected_source.id == source.id %}checked{% endif %}
+                           {% if loop.first and not selected_source %}checked{% endif %}
+                           onchange="this.closest('.source-option').classList.toggle('selected')">
+                    <span class="source-option-icon">{{ source.icon }}</span>
+                    <span class="source-option-name">{{ source.name }}</span>
+                    {% if source.type == 'paid' %}
+                    <span class="tag tag-paid-small">¥{{ source.price }}</span>
+                    {% endif %}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 2: 输入URL/关键词 -->
+    <div class="config-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+            <h3>输入链接或关键词</h3>
+            <p>输入目标页面的URL，或直接输入关键词</p>
+            <div class="input-group">
+                <label class="input-label">URL 链接（可选）</label>
+                <input type="text" name="url" class="form-input" placeholder="例如：https://www.meituan.com/shop/xxxx" value="{{ selected_url or '' }}">
+            </div>
+            <div class="input-group">
+                <label class="input-label">关键词（可选）</label>
+                <input type="text" name="keyword" class="form-input" placeholder="例如：热门奶茶品牌评价分析" value="{{ keyword or '' }}">
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 3: 选择分析维度 -->
+    <div class="config-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+            <h3>选择分析维度</h3>
+            <p>选择您关心的分析方向（可多选）</p>
+            <div class="dimension-grid">
+                {% for dim in dimensions %}
+                <label class="dimension-option">
+                    <input type="checkbox" name="dimensions" value="{{ dim.id }}"
+                           {% if loop.first or loop.index <= 2 %}checked{% endif %}>
+                    <div class="dimension-content">
+                        <div class="dimension-name">{{ dim.name }}</div>
+                        <div class="dimension-desc">{{ dim.description }}</div>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 4: 执行分析 -->
+    <div class="config-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+            <h3>开始分析</h3>
+            <p>点击下方按钮，系统将自动完成数据提取和分析</p>
+            <div class="input-group">
+                <label class="input-label">定时分析（可选）</label>
+                <select name="schedule" class="form-input">
+                    <option value="0">不开启定时分析</option>
+                    <option value="24">每天分析一次</option>
+                    <option value="168">每周分析一次</option>
+                    <option value="720">每月分析一次</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                🚀 开始分析
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}

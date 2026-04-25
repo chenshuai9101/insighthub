@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}InsightHub - 登录{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card">
+        <h1>🔍 InsightHub</h1>
+        <p class="auth-desc">输入邮箱即可开始使用（无需密码）</p>
+
+        <form method="POST" action="/login" class="auth-form">
+            <div class="input-group">
+                <label class="input-label">邮箱地址</label>
+                <input type="email" name="email" class="form-input" placeholder="your@email.com" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+                📧 发送登录链接 / 直接登录
+            </button>
+        </form>
+
+        <div class="auth-note">
+            <p>💡 也可以<strong><a href="/configure">直接使用</a></strong>，不登录也能体验</p>
+            <p class="note-small">登录后可以管理您的分析历史和API Key</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
