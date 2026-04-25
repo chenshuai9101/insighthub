@@ -1,0 +1,8 @@
+# Git ignore for InsightHub
+__pycache__/
+*.pyc
+*.db
+*.db-shm
+*.db-wal
+.DS_Store
+data/
